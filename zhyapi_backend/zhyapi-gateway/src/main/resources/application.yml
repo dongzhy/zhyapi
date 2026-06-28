@@ -1,0 +1,35 @@
+server:
+  port: 8090
+  # 强制指定为响应式Web应用，适配Gateway，彻底规避Spring MVC冲突
+spring:
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      routes:
+         - id: api_route
+           uri: http://localhost:8123
+           predicates:
+             - Path=/api/**
+      default-filters:
+        - AddResponseHeader=source,zhy
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: trace
+
+dubbo:
+  application:
+    name: zhyapi-gateway-consumer
+    qos-enable: false # 关闭Dubbo的运维端口，避免额外冲突
+  registry:
+    # 必须和提供者一致：nacos地址+type=nacos
+    address: nacos://localhost:8848

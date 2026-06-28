@@ -1,0 +1,10 @@
+server:
+  port: 8123
+  servlet:
+    context-path: /api
+
+zhyapi:
+  client:
+    access-key: zhy
+    secret-key: abcdefgh
+
